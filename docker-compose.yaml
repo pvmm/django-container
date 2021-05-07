@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=pdad2021
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - "./data/db:/var/lib/postgresql/data/"
+    networks:
+      - pdad2021
+    hostname: db
+  web:
+    build:
+      dockerfile: django.Dockerfile
+      context: .
+    restart: always
+    volumes:
+      - "./server/pdad2021:/var/www/django/pdad2021"
+    networks:
+      - pdad2021
+    hostname: web
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    command: ./start.sh
+
+networks:
+  pdad2021:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.15.0.0/16
