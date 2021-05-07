@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=django_project
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret # change it!
+    volumes:
+      - "./data/db:/var/lib/postgresql/data/"
+    networks:
+      - django_project
+    hostname: db
+  web:
+    build:
+      dockerfile: django.Dockerfile
+      context: .
+    restart: always
+    volumes:
+      - "./server/src:/var/www/django/src"
+    networks:
+      - django_project
+    hostname: web
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    command: ./wait-for-it.sh db:5432 -- ./start.sh
+
+networks:
+  django_project:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.15.0.0/16
