@@ -26,7 +26,7 @@ services:
       - "8000:80"
     depends_on:
       - db
-    command: ./start.sh
+    command: ./wait-for-it.sh db:5432 -- ./start.sh
 
 networks:
   pdad2021:
