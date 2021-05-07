@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_DB=pdad2021
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret
+      - POSTGRES_PASSWORD=secret # Alterar aqui!
     volumes:
       - "./data/db:/var/lib/postgresql/data/"
     networks:
